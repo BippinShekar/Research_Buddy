@@ -7,4 +7,4 @@ RUN pip install -r requirements.txt
 
 COPY . .
 
-CMD ["python", "main.py"]
+CMD python main.py > app.log 2>&1 & tail -f app.log
