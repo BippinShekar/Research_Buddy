@@ -12,9 +12,9 @@ class BaseProvider(ABC):
             model, model_name: str, agent_name: str, 
             role: str, task: str, instructions: str, 
             structured_outputs: bool, response_structure: str, 
-            user_input: str, temperature: float, examples: list = None ):
+            user_input: str, temperature: float = 0, examples: list = None ):
         
-        self.model = model,
+        self.model = model
         self.model_name = model_name
         self.agent_name = agent_name
         self.role = role
@@ -79,7 +79,7 @@ class BaseProvider(ABC):
         
         return normalized_template.format(**normalized_kwargs)
     
-    def retry_request(self, func, max_retries: int = 3, **kwargs):
+    def retry_request(self, func, attempt: int = 1, max_retries: int = 3, **kwargs):
         """
         Retry a failed request with exponential backoff.
 
@@ -94,12 +94,13 @@ class BaseProvider(ABC):
         Raises:
             Exception: If max retries are exceeded without a successful call.
         """
-        for _ in range(max_retries):
+        if attempt < max_retries:
             try:
-                return func(**kwargs)
+                return func(attempt=attempt, max_retries=max_retries, **kwargs)
             except Exception as e:
                 print(f"Error: {e}")
-                time.sleep(os.getenv("LLM_RETRY_DELAY", 3))
+                time.sleep(int(os.getenv("LLM_RETRY_DELAY", 3)))
+                return func(attempt=attempt+1, max_retries=max_retries, **kwargs)
         raise Exception("Max retries exceeded")
     
     @abstractmethod

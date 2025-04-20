@@ -1,6 +1,7 @@
 from providers.base_provider import BaseProvider
 from pydantic import ValidationError
 import traceback
+import time
 from openai import BadRequestError
 
 class OpenAIProvider(BaseProvider):    
@@ -29,11 +30,10 @@ class OpenAIProvider(BaseProvider):
         """
 
         try:
-
+            start_time = time.time()
             system_prompt = self.generate_system_prompt()
             user_input = self.generate_user_input(**kwargs)
-
-            response = self.model.chat.completions.create(
+            response = self.model.beta.chat.completions.parse(
                 model=self.model_name,
                 messages=[
                     {"role": "system", "content": system_prompt}, 
@@ -47,7 +47,7 @@ class OpenAIProvider(BaseProvider):
             prompt_tokens = response.usage.prompt_tokens
             completion_tokens = response.usage.completion_tokens
             total_tokens = response.usage.total_tokens  
-            response_time = response.choices[0].message.response_time
+            response_time = round(time.time() - start_time, 2)
 
             if self.structured_outputs:
                 try:

@@ -1,8 +1,8 @@
-from providers.openai_provider import OpenAIProvider
 from typing import Any
 from openai import OpenAI
 import os
 from providers.base_provider import BaseProvider
+from providers.providers.openai_provider import OpenAIProvider
 
 def get_provider(provider: str, selected_model: str = None) -> tuple[Any, BaseProvider]:
     """
@@ -18,11 +18,12 @@ def get_provider(provider: str, selected_model: str = None) -> tuple[Any, BasePr
             - The provider class that inherits from BaseProvider
 
     Raises:
-        KeyError: If the specified provider is not found in the provider mapping
+        ValueError: If the specified provider is not found in the provider mapping
     """
     provider_map = {
-        "openai": lambda: (OpenAI(os.getenv("OPENAI_API_KEY")), OpenAIProvider)
+        "openai": (OpenAI(api_key=os.getenv("OPENAI_API_KEY")), OpenAIProvider)
     }
     if provider not in provider_map:
         raise ValueError(f"Provider '{provider}' not supported. Available providers: {list(provider_map.keys())}")
-    return provider_map[provider]()
+    model_client, provider_class = provider_map[provider]
+    return model_client, provider_class

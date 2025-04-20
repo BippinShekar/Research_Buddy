@@ -1,5 +1,5 @@
 from pydantic import BaseModel
 
-class Agent1Response(BaseModel):
+class ResearchAgentResponse(BaseModel):
     reasoning: str
     answer: str
