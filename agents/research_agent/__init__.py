@@ -1,4 +1,11 @@
-from agents.research_agent.prompts import RESEARCH_ROLE, RESEARCH_TASK, RESEARCH_INSTRUCTIONS, RESEARCH_OUTPUT_FORMAT, RESEARCH_EXAMPLES, RESEARCH_USER_INPUT
+from agents.research_agent.prompts import (
+    RESEARCH_ROLE, 
+    RESEARCH_TASK, 
+    RESEARCH_INSTRUCTIONS, 
+    RESEARCH_OUTPUT_FORMAT, 
+    RESEARCH_EXAMPLES, 
+    RESEARCH_USER_INPUT
+)
 from agents.research_agent.model import ResearchAgentResponse
 from providers.manager import get_provider
 

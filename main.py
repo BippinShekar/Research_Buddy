@@ -3,6 +3,7 @@ import uvicorn
 import os
 from fastapi.middleware.cors import CORSMiddleware
 from routes.research_routes import router as research_routers
+from routes.resource_routes import router as resource_routers
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -18,6 +19,7 @@ app.add_middleware(
 )
 
 app.include_router(research_routers, prefix="/api")
+app.include_router(resource_routers, prefix="/api")
 
 if __name__ == "__main__":
     try:
