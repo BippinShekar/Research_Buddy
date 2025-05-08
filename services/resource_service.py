@@ -2,6 +2,7 @@ from helpers.helpers import pdf_reader
 from helpers.loggers import get_logger
 from agents.resource_agent import understand_resource_agent
 import os
+import traceback
 
 logger = get_logger()
 
@@ -28,8 +29,7 @@ def process_pdf_document(pdf_file, provider: str = None, selected_model: str = N
         pdf_content = pdf_reader(pdf_file)
 
         text_content = pdf_content["text"]
-        images = pdf_content["images"]
-        
+        images = pdf_content["images"] #noqa
         resource_agent = understand_resource_agent(provider=provider, selected_model=selected_model)
         
         response_json, prompt_tokens, completion_tokens, total_tokens, response_time = resource_agent.generate_response(
@@ -44,12 +44,11 @@ def process_pdf_document(pdf_file, provider: str = None, selected_model: str = N
         document_info = {
             "summary": response_json.summary,
             "title": response_json.title,
-            "objective": response_json.objective,
-            "images": images if images else []
+            "atomic_summaries": response_json.atomic_summaries
         }
         
         return document_info
         
     except Exception as e:
-        logger.error(f"Error processing PDF document: {e}")
+        logger.error(f"Error processing PDF document: {e}.\n{traceback.format_exc()}")
         raise e

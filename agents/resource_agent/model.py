@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 
 class ResourceAgentResponse(BaseModel):
-    objective: str
+    atomic_summaries: dict
     title: str
     summary: str
