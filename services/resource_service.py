@@ -6,7 +6,7 @@ import traceback
 
 logger = get_logger()
 
-def process_pdf_document(pdf_file, provider: str = None, selected_model: str = None):
+def process_document(pdf_file, provider: str = None, selected_model: str = None):
     """Process a PDF document and extract key information using an AI research agent.
     
     Args:
