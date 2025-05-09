@@ -1,4 +1,4 @@
-from helpers.helpers import pdf_reader
+from helpers.helpers import PDFProcessor
 from helpers.loggers import get_logger
 from agents.resource_agent import understand_resource_agent
 import os
@@ -26,10 +26,11 @@ def process_pdf_document(pdf_file, provider: str = None, selected_model: str = N
         provider = os.getenv("PROVIDER", "openai")
         
         # Extract content from PDF
-        pdf_content = pdf_reader(pdf_file)
+        pdf_processor = PDFProcessor(pdf_path = pdf_file)
 
-        text_content = pdf_content["text"]
-        images = pdf_content["images"] #noqa
+        text_content = pdf_processor.extract_text()
+        image_content = pdf_processor.extract_images() #noqa
+
         resource_agent = understand_resource_agent(provider=provider, selected_model=selected_model)
         
         response_json, prompt_tokens, completion_tokens, total_tokens, response_time = resource_agent.generate_response(

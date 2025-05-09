@@ -7,6 +7,7 @@ class EnvironmentVariables(Enum):
     LLM_RETRY_DELAY = "LLM_RETRY_DELAY"
     SELECTED_MODEL = "SELECTED_MODEL"
     PROVIDER = "PROVIDER"
+    REFERENCE_PATTERN = "REFERENCE_PATTERN"
 
     def value_from_env(self) -> str | None:
         return os.getenv(self.value)
