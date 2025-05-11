@@ -10,9 +10,11 @@ The goal is to create a lesson that will ensure maximum understanding of the stu
 """
 
 ADMIN_INSTRUCTIONS = """
+Ensure the content is thoroughly analyzed to form a cohesive and technically cincilating conversation of a professor ensuring the student understands the nitty grittys of the content.
 """
 
 ADMIN_OUTPUT_FORMAT = """
+{"conversation":"The emulated conversation"}
 """
 
 AUDION_USER = """
