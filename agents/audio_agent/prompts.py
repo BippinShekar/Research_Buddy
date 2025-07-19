@@ -18,7 +18,7 @@ ADMIN_OUTPUT_FORMAT = """
 """
 
 AUDION_USER = """
-Perform said task with the followin =g information:
-Data: {}
-References_data = {}
+Perform said task with the following information:
+Data: {data}
+References_data = {references}
 """

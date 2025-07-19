@@ -1,10 +1,19 @@
 from pathlib import Path
 from openai import OpenAI
+import base64
 
 class AudioProvider():
 
-    def __init__(self) -> None:
-        pass
+    def __init__(self, model: str, model_name: str, agent_name: str, role: str, task: str, instructions: str, user_input: str, temperature: float = 0, examples: list = None) -> None:
+        self.model = model
+        self.model_name = model_name
+        self.agent_name = agent_name
+        self.role = role
+        self.task = task
+        self.instructions = instructions
+        self.user_input = user_input
+        self.temperature = temperature
+        self.examples = examples
 
     def generate_system_prompt(self):
         """
@@ -25,21 +34,37 @@ class AudioProvider():
                          f"INSTRUCTIONS:\n{self.instructions}\n"
                          )
         
-        if self.response_structure:
-            system_prompt += f"OUTPUT FORMAT:\nRespond with the following JSON structure:\n{self.response_structure.schema_json()}\n"
-
-        if self.examples:
-            system_prompt += f"EXAMPLES:\n{self.examples}\n"
+        system_prompt += "OUTPUT:\nRespond in a humane way, with a clear and concise answer."
         
         return system_prompt
     
-client = OpenAI()
-speech_file_path = Path(__file__).parent / "speech.mp3"
+    def generate_audio(self, prompt: str):
+        """
+        Generate audio from the LLM, with the given prompt as input. 
 
-with client.audio.speech.with_streaming_response.create(
-    model="gpt-4o-mini-tts",
-    voice="coral",
-    input="Today is a wonderful day to build something people love!",
-    instructions="Speak in a cheerful and positive tone.",
-) as response:
-    response.stream_to_file(speech_file_path)
+        Args:
+            prompt (str): The prompt to generate audio from.
+
+        Returns:
+            str: The path to the generated audio file.
+        """
+
+        audio_output = self.model.chat.completions.create(
+            model="gpt-4o-audio-preview",
+            modalities=["text", "audio"],
+            audio={"voice": "alloy", "format": "wav"},
+            messages=[
+                {
+                    "role": "system",
+                    "content": self.generate_system_prompt()
+                },
+                {
+                    "role": "user",
+                    "content": prompt
+                }
+            ]
+        )
+
+        wav_bytes = base64.b64decode(audio_output.choices[0].message.audio.data)
+
+        return wav_bytes

@@ -6,7 +6,7 @@ from routes.research_routes import router as research_routers
 from routes.resource_routes import router as resource_routers
 from enums.environmet_variables import EnvironmentVariables
 
-app = FastAPI()
+app = FastAPI() 
 
 app.add_middleware(
     CORSMiddleware,

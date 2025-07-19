@@ -65,8 +65,8 @@ async def reference_agent(request: ReferenceScouterRequest):
         JSONResponse: A JSON response with the extracted reference data or an error message.
     """
     pdf_path = request.pdf_path
-    provider = request.provider
-    selected_model = request.selected_model
+    provider = request.provider #noqa
+    selected_model = request.selected_model #noqa
 
     logger.info(f"Reference Controller processing resource references from {pdf_path}")
     try:
